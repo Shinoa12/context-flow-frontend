@@ -10,20 +10,20 @@ const Popup = () => {
       alert('Escribe un mensaje primero.');
       return;
     }
-
+  
     try {
-      const res = await fetch('http://localhost:3000/api/mensaje', {
+      const res = await fetch('http://localhost:8000/ask', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ mensaje: message })
+        body: JSON.stringify({ question: message }) // Corregido aquí
       });
-
+  
       if (!res.ok) {
         throw new Error('Error en la respuesta del servidor');
       }
-
+  
       const data = await res.json();
       setResponse(data);
     } catch (error) {
@@ -33,19 +33,33 @@ const Popup = () => {
   };
 
   return (
-    <div className="popup-container">
-      <h2>Enviar Mensaje</h2>
+    <div className="chat-container">
+      <h2 className="chat-title">Drop Your Question</h2>
+      
       <textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Escribe tu mensaje..."
+        placeholder="¿Qué quieres saber hoy? yolo..."
+        className="chat-textarea"
       />
-      <button onClick={handleSendMessage}>Enviar</button>
+      
+      <button 
+        onClick={handleSendMessage}
+        className="send-button"
+      >
+        Enviar ✉️
+      </button>
+      
       {response && (
-        <div className="response-container">
-          <p>{response.mensaje}</p>
-          <a href={response.url} target="_blank" rel="noopener noreferrer">
-            Ver más
+        <div className="response-box">
+          <p>{response.answer}</p>
+          <a 
+            href={response.link} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="view-more"
+          >
+            Ver más →
           </a>
         </div>
       )}
